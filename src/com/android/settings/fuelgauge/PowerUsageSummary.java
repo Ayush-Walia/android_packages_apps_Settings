@@ -116,7 +116,7 @@ public class PowerUsageSummary extends PowerUsageBase implements OnLongClickList
     @VisibleForTesting
     PowerGaugePreference mLastFullChargePref;
     @VisibleForTesting
-    PowerGaugePreference mBatteryTemp;
+    PowerGaugePreference mBatteryTempPref;
     @VisibleForTesting
     PowerUsageFeatureProvider mPowerFeatureProvider;
     @VisibleForTesting
@@ -253,9 +253,9 @@ public class PowerUsageSummary extends PowerUsageBase implements OnLongClickList
                 com.android.internal.R.integer.config_criticalBatteryWarningLevel) + 1;
 
         mScreenUsagePref = (PowerGaugePreference) findPreference(KEY_SCREEN_USAGE);
+        mBatteryTempPref = (PowerGaugePreference) findPreference(KEY_BATTERY_TEMP);
         mLastFullChargePref = (PowerGaugePreference) findPreference(
                 KEY_TIME_SINCE_LAST_FULL_CHARGE);
-        mBatteryTemp = (PowerGaugePreference) findPreference(KEY_BATTERY_TEMP);
         mFooterPreferenceMixin.createFooterPreference().setTitle(R.string.battery_footer_summary);
         mBatteryUtils = BatteryUtils.getInstance(getContext());
 
@@ -415,11 +415,7 @@ public class PowerUsageSummary extends PowerUsageBase implements OnLongClickList
         updateLastFullChargePreference();
         mScreenUsagePref.setSummary(StringUtil.formatElapsedTime(getContext(),
                 mBatteryUtils.calculateScreenUsageTime(mStatsHelper), false));
-        mBatteryTemp.setSummary(
-                com.android.internal.util.havoc.Utils.mccCheck(getContext()) ?
-                com.android.internal.util.havoc.Utils.batteryTemperature(getContext(), true) + "°F" :
-                com.android.internal.util.havoc.Utils.batteryTemperature(getContext(), false) + "°C");
-
+        mBatteryTempPref.setSubtitle(BatteryInfo.batteryTemp+" "+Character.toString ((char) 176) + "C");
         final long elapsedRealtimeUs = SystemClock.elapsedRealtime() * 1000;
         Intent batteryBroadcast = context.registerReceiver(null,
                 new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
