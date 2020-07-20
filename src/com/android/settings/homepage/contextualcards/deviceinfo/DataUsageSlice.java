@@ -21,7 +21,6 @@ import android.app.settings.SettingsEnums;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.Settings;
 import android.telephony.SubscriptionManager;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -77,14 +76,10 @@ public class DataUsageSlice implements CustomSliceable {
         SubscriptionManager subscriptionManager = (SubscriptionManager) mContext
                 .getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
         int defaultSubId = subscriptionManager.getDefaultDataSubscriptionId();
-        boolean showDailyDataUsage = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.DATA_USAGE_PERIOD, 1) == 0;
         if (defaultSubId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
             info = dataUsageController.getDataUsageInfo();
         } else {
-            info = showDailyDataUsage ? dataUsageController.getDailyDataUsageInfo(
-                    DataUsageUtils.getMobileTemplate(mContext, defaultSubId))
-                    : dataUsageController.getDataUsageInfo(
+            info = dataUsageController.getDataUsageInfo(
                     DataUsageUtils.getMobileTemplate(mContext, defaultSubId));
         }
 

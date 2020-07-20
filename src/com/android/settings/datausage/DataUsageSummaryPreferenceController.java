@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkPolicyManager;
 import android.net.NetworkTemplate;
-import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.SubscriptionPlan;
@@ -198,10 +197,7 @@ public class DataUsageSummaryPreferenceController extends BasePreferenceControll
 
         final DataUsageController.DataUsageInfo info;
         if (DataUsageUtils.hasSim(mActivity)) {
-            boolean showDailyDataUsage = Settings.System.getInt(mContext.getContentResolver(),
-                    Settings.System.DATA_USAGE_PERIOD, 1) == 0;
-            info = showDailyDataUsage ? mDataUsageController.getDailyDataUsageInfo(mDefaultTemplate)
-                    : mDataUsageController.getDataUsageInfo(mDefaultTemplate);
+            info = mDataUsageController.getDataUsageInfo(mDefaultTemplate);
             mDataInfoController.updateDataLimit(info, mPolicyEditor.getPolicy(mDefaultTemplate));
             summaryPreference.setWifiMode(/* isWifiMode */ false,
                     /* usagePeriod */ null, /* isSingleWifi */ false);
