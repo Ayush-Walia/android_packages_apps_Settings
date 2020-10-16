@@ -19,7 +19,6 @@ import android.app.settings.SettingsEnums;
 import android.content.Context;
 import android.net.NetworkTemplate;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.SubscriptionPlan;
@@ -53,8 +52,6 @@ public class DataUsageSummary extends DataUsageBaseFragment implements DataUsage
 
     static final boolean LOGD = false;
 
-    private static boolean showDailyDataUsage;
-
     public static final String KEY_RESTRICT_BACKGROUND = "restrict_background";
 
     private static final String KEY_STATUS_HEADER = "status_header";
@@ -82,9 +79,6 @@ public class DataUsageSummary extends DataUsageBaseFragment implements DataUsage
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Context context = getContext();
-
-        showDailyDataUsage = Settings.System.getInt(context.getContentResolver(),
-                Settings.System.DATA_USAGE_PERIOD, 1) == 0;
 
         boolean hasMobileData = DataUsageUtils.hasMobileData(context);
 
@@ -316,8 +310,7 @@ public class DataUsageSummary extends DataUsageBaseFragment implements DataUsage
         }
 
         private CharSequence formatFallbackData() {
-            DataUsageController.DataUsageInfo info = showDailyDataUsage ? mDataController.getDailyDataUsageInfo()
-                    : mDataController.getDataUsageInfo();
+            DataUsageController.DataUsageInfo info = mDataController.getDataUsageInfo();
             if (info == null) {
                 return DataUsageUtils.formatDataUsage(mActivity, 0);
             } else if (info.limitLevel <= 0) {
